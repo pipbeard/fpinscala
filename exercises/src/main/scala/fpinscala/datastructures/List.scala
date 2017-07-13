@@ -50,13 +50,44 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
 
-  def tail[A](l: List[A]): List[A] = sys.error("todo")
+  def tail[A](l: List[A]): List[A] = l match {
+    case Nil => Nil
+    case Cons(_, tail) => tail
+  }
 
-  def setHead[A](l: List[A], h: A): List[A] = sys.error("todo")
+  def setHead[A](l: List[A], h: A): List[A] = l match {
+    case Nil => Nil
+    case Cons(head, tail) => Cons(h, tail)
+  }
 
-  def drop[A](l: List[A], n: Int): List[A] = sys.error("todo")
+  def drop[A](l: List[A], n: Int): List[A] = {
+    def go(list: List[A], remaining: Int): List[A] = {
+      val nextList = list match {
+        case Cons(_, Nil) => Nil,
+        case Cons(h, t) => t
+      }
 
-  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = sys.error("todo")
+      if (remaining > 0) {
+        go(nextList, remaining - 1)
+      } else {
+        nextList
+      }
+    }
+    go(l, n)
+  }
+
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = {
+    def go(list: List[A]): List[A] = {
+      val nextList: List[A] = list match {
+        case Nil => Nil
+        case Cons(h, t) if !f(h) => t
+      }
+
+      go(newList)
+    }
+
+    go(l)
+  }
 
   def init[A](l: List[A]): List[A] = sys.error("todo")
 
